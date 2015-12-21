@@ -45,7 +45,7 @@ ok(filename |> File.read |> Poison.Parser.parse)
 ## Usage
 
 Just `import OkJose`, it will provide an
-`ok` macro that you can pipe to.
+`ok/1` macro that you can pipe to.
 
 ## Example
 
