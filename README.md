@@ -54,11 +54,11 @@ Just `import OkJose`, it will provide an
 def dup(x), do: {:ok, x * 2}
 def nop(x), do: {:error, x}
 
-24 |> dup |> ok # => {:ok, 48}
+12 |> dup |> dup |> ok # => {:ok, 48}
 24 |> nop |> dup |> ok # => {:error, 24}
 
 24 |> dup |> ok! # => 48
-24 |> nop |> dup |> ok! # raises Error
+24 |> nop |> dup |> ok! # raises
 ```
 
 ## Installation
