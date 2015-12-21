@@ -4,9 +4,11 @@ defmodule OkJose.Mixfile do
   def project do
     [app: :ok_jose,
      version: "0.0.1",
+     description: description,
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     package: package,
      deps: deps]
   end
 
@@ -17,6 +19,18 @@ defmodule OkJose.Mixfile do
     [applications: [:logger]]
   end
 
+  def description do
+    """
+    Pipe functions that produce ok/error tuples.
+    """
+  end
+
+  defp package do
+    [files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+     maintainers: ["Victor Borja"],
+     licenses: ["Apache 2.0"],
+     links: %{"GitHub" => "https://github.com/vic/ok_jose"}]
+  end
   # Dependencies can be Hex packages:
   #
   #   {:mydep, "~> 0.3.0"}
