@@ -1,5 +1,13 @@
 defmodule OkJose do
 
+  defmacro ok!(code) do
+    quote do
+      ok(unquote(code)) |> case do
+        {:ok, value} -> value
+      end
+    end
+  end
+
   defmacro ok({:|>, _, _} = code), do: code |> ok_pipe
   defmacro ok(code), do: code |> OkJose.Macro.piped |> ok_pipe
 
