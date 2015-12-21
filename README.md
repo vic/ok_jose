@@ -2,7 +2,7 @@
 
 A tiny library to pipe functions that
 return `{:ok, _}` or `{:error, _}` without
-having you tu mess with error handling.
+having you to mess with matching everywhere.
 
 ## Motivation
 
@@ -17,6 +17,30 @@ at each point. If an non-ok thing is
 found at any point it breaks the rest of
 the chain execution and it's returned
 as result.
+
+So, for example, the following code
+
+```elixir
+filename
+|> File.read()
+|> case do
+  {:ok, content} ->
+    content |> Poison.Parser.parse()
+  {:error, _} = error -> error
+end
+```
+
+can be written as:
+
+```elixir
+filename |> File.read |> Poison.Parser.parse |> ok
+```
+
+or alternatively:
+
+```elixir
+ok(filename |> File.read |> Poison.Parser.parse)
+```
 
 ## Usage
 
