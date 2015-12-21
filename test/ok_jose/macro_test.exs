@@ -1,8 +1,8 @@
-defmodule Ok.MacroTest do
+defmodule OkJose.MacroTest do
   use ExUnit.Case
-  doctest Ok.Macro
+  doctest OkJose.Macro
 
-  import Ok.Macro
+  import OkJose.Macro
 
   defmacrop assert_piped(code, piped) do
     piped = Macro.escape(piped)
