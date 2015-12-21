@@ -51,15 +51,14 @@ Just `import OkJose`, it will provide an
 
 ```elixir
 
-def foo, do: {:ok, 24}
 def dup(x), do: {:ok, x * 2}
 def nop(x), do: {:error, x}
 
-foo |> dup |> ok # => {:ok, 48}
-foo |> nop |> dup |> ok # => {:error, 24}
+24 |> dup |> ok # => {:ok, 48}
+24 |> nop |> dup |> ok # => {:error, 24}
 
-foo |> dup |> ok! # => 48
-foo |> nop |> dup |> ok! # raises Error
+24 |> dup |> ok! # => 48
+24 |> nop |> dup |> ok! # raises Error
 ```
 
 ## Installation
