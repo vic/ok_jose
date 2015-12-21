@@ -42,6 +42,6 @@ defmodule OkJose.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:mix_test_watch, "~> 0.2", only: :dev},
-     {:credo, "~> 0.1.9", only: :dev}]
+     {:credo, "~> 0.2.4", only: :dev}]
   end
 end

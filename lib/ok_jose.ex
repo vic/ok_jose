@@ -1,8 +1,12 @@
 defmodule OkJose do
 
+  @moduledoc """
+  Easily pipe between functions returning `{:ok, _}` or `{:error, _}`.
+  """
+
   defmacro ok!(code) do
     quote do
-      ok(unquote(code)) |> case do
+      unquote(code) |> ok |> case do
         {:ok, value} -> value
       end
     end
@@ -13,7 +17,7 @@ defmodule OkJose do
 
   defp ok_pipe(pipe) do
     [{first,_} | rest] = pipe |> Macro.unpipe
-    rest 
+    rest
     |> Enum.map(&case_call/1)
     |> List.insert_at(0, first)
     |> Enum.reduce(&Macro.pipe(&2, &1, 0))
@@ -27,5 +31,5 @@ defmodule OkJose do
       end
     end
   end
-  
+
 end
