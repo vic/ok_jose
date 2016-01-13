@@ -2,7 +2,7 @@ defmodule OkJoseTest do
   use ExUnit.Case
   doctest OkJose
 
-  import OkJose
+  use OkJose
   import Kernel, except: [div: 2]
 
   test "returns int value" do

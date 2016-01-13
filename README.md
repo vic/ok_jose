@@ -1,22 +1,21 @@
 # Ok Jose
 
-A tiny library to pipe functions that
-return `{:ok, _}` or `{:error, _}` without
-having you to mess with matching everywhere.
+A tiny library for piping function return
+values on a given pattern like the erlang
+idiom `{:ok, _}` and `{:error, _}` tuples.
+
+You can also define your own pattern-matched
+pipes besides `ok` and `error`.
 
 ## Motivation
 
 A lot of erlang libraries follow the
 convention of returning `{:ok, _}` and
-`{:error, _}` tuples to denote success/failure.
+`{:error, _}` tuples to denote success or failure.
 
-I just wanted an easy way to pipe 
-functions in a *happy path*, that is, a
-pipe that expects `{:ok, _}` to be returned
-at each point. If an non-ok thing is
-found at any point it breaks the rest of
-the chain execution and it's returned
-as result.
+
+This library is my try at having a beautiful syntax for a *happy pipe*, that is, a pipe that expects `{:ok, _}` tuples to be returned by each piped function.
+If any piped function returns a non matched value, the remaining functions expecting an `{:ok, _}` value wont get executed.
 
 So, for example, the following code
 
@@ -36,16 +35,45 @@ can be written as:
 filename |> File.read |> Poison.Parser.parse |> ok
 ```
 
-or alternatively:
-
-```elixir
-ok(filename |> File.read |> Poison.Parser.parse)
-```
-
 ## Usage
 
-Just `import OkJose`, it will provide an
-`ok/1` macro that you can pipe to.
+```elixir
+use OkJose
+```
+
+Provides you with the following macros:
+`ok`, `ok!`, `error`, `error!`
+
+
+```elixir
+use OkJose.Pipe
+```
+
+which provides you the `defpipe` macro.
+
+#### `ok`
+
+Pipes values into functions as long as they match `{:ok, _}`
+
+```elixir
+{:ok, v} |> f |> g |> ok
+```
+
+#### `ok!`
+
+Pipes values into functions but if at any point a value
+does not match `{:ok, _}` raises a match error.
+
+
+#### `defpipe`
+
+Allows you to define custom pipe patterns, for example
+the previous `ok`, `ok!` macros are defined like:
+
+```elixir
+defpipe ok(value <- {:ok, value})
+defpipe ok!(value <- {:ok, value})
+```
 
 ## Example
 
