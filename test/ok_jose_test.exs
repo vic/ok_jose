@@ -10,7 +10,7 @@ defmodule OkJoseTest do
   end
 
   test "returns tuple value" do
-    assert {1, 2} = {1, 2} |> ok
+    assert {:ok, 22} = {:ok, 22} |> ok
   end
 
   test "invokes function" do
@@ -29,8 +29,19 @@ defmodule OkJoseTest do
     assert {:ok, 48} = {:ok, 24} |> dup |> ok
   end
 
+  test "error halts chain" do
+    assert {:error, 22} = {:ok, 22} |> nop |> dup |> ok
+  end
+
+  test "anon fn returning error" do
+    fun = fn ->
+      {:error, 12}
+    end
+    assert {:error, 12} = fun.() |> dup |> ok
+  end
+
   test "ok! raises on non-ok" do
-    assert_raise CaseClauseError, fn -> 
+    assert_raise CaseClauseError, fn ->
       foo |> nop |> ok!
     end
   end
@@ -42,7 +53,7 @@ defmodule OkJoseTest do
   defp foo, do: {:ok, 24}
   defp dup(x), do: {:ok, x * 2}
   defp nop(x), do: {:error, x}
-  defp div(x, 0), do: {:error, :div_by_zero}
+  defp div(_x, 0), do: {:error, :div_by_zero}
   defp div(x, y), do: {:ok, x / y}
 
 end
