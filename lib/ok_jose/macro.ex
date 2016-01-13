@@ -2,6 +2,8 @@ defmodule OkJose.Macro do
 
   @moduledoc false
 
+  def piped(code = {:|>, _, _}), do: code
+
   def piped(code = {_, _, nil}), do: code
 
   def piped(code = {_, _, []}), do: code

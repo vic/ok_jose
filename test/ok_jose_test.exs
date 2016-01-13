@@ -42,7 +42,7 @@ defmodule OkJoseTest do
 
   test "ok! raises on non-ok" do
     assert_raise CaseClauseError, fn ->
-      foo |> nop |> ok!
+      foo |> nop |> dup |> ok!
     end
   end
 

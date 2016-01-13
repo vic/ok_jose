@@ -20,7 +20,9 @@ defmodule OkJose.Pipe do
   end
 
   def pipe!(code, pattern, value) do
-    piped = pipe(code, pattern, value)
+    piped =
+      OkJose.Macro.piped(code)
+      |> make_pipe(&match_call!(&1, pattern, value))
     quote do
       case unquote(piped) do
         unquote(pattern) -> unquote(value)
@@ -28,18 +30,15 @@ defmodule OkJose.Pipe do
     end
   end
 
-  def pipe({:|>, _, _} = code, pattern, value) do
-    code |> run_pipe(pattern, value)
-  end
-
   def pipe(code, pattern, value) do
-    code |> OkJose.Macro.piped |> run_pipe(pattern, value)
+    OkJose.Macro.piped(code)
+    |> make_pipe(&match_call(&1, pattern, value))
   end
 
-  defp run_pipe(pipe, pattern, value) do
+  defp make_pipe(pipe, needle) do
     [{first,_} | rest] = pipe |> Macro.unpipe
     rest
-    |> Enum.map(&match_call(&1, pattern, value))
+    |> Enum.map(needle)
     |> List.insert_at(0, first)
     |> Enum.reduce(&Macro.pipe(&2, &1, 0))
   end
@@ -49,6 +48,14 @@ defmodule OkJose.Pipe do
       case do
         unquote(pattern) -> unquote(value) |> unquote(call)
         other -> other
+      end
+    end
+  end
+
+  defp match_call!({call, _}, pattern, value) do
+    quote do
+      case do
+        unquote(pattern) -> unquote(value) |> unquote(call)
       end
     end
   end
