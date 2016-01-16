@@ -7,14 +7,13 @@ defmodule OkJose.Pipe do
   end
 
   defmacro defpipe({name, _, [{:<-, _, [value, pattern]}]}) do
-    pattern = Macro.escape(pattern)
-    value   = Macro.escape(value)
+    [pattern, value] = [pattern, value] |> Enum.map(&Macro.escape/1)
     bang = Atom.to_string(name) |> String.ends_with?("!")
     pipe = bang && :pipe! || :pipe
     quote do
       defmacro unquote(name)(code) do
-        import OkJose.Pipe, only: [{unquote(pipe), 3}]
-        unquote(pipe)(code, unquote(pattern), unquote(value))
+        OkJose.Pipe.unquote(pipe)(
+          code, unquote(pattern), unquote(value))
       end
     end
   end
