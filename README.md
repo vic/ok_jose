@@ -130,6 +130,13 @@ def purr(%Tiger{}), do: "PuRRR"
 
 %Kitten{} |> purr |> ok_kitten #=> "purr"
 ok_kitten( %Doggie{} |> purr ) #=> %Doggie{}
+
+
+# using do/end syntax
+# block executed only for matching kittens
+%Kitten{} |> (ok_kitten do
+  k -> purr(k)
+end)
 ```
 
 ## About ok

@@ -38,6 +38,10 @@ defmodule OkJose.Pipe do
     case_next(code, patterns, @noop) |> rpipe(prev)
   end
 
+  def pipe!(prev, code = [do: [{:->, _, _} | _]], patterns) do
+    {:case, [], [code]} |> case_next(patterns, @noop) |> rpipe(prev)
+  end
+
   def pipe(code, patterns) do
     piped(code, patterns, @same)
   end

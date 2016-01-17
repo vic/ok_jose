@@ -44,7 +44,6 @@ defmodule OkJose.PipeTest do
     def doggie, do: %Doggie{}
   end
 
-
   test "defpipe catz pipes with pattern" do
     import Cats
     import Dogs
@@ -62,7 +61,6 @@ defmodule OkJose.PipeTest do
 
   test "defpipe catz/2 with do/end" do
     import Cats
-    import Dogs
     assert Kitten =
       kitten |> (ok_cats do %{__struct__: x} -> x end)
     assert Tiger =
