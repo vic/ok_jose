@@ -11,7 +11,7 @@ defmodule OkJose.Pipe do
     end
   end
 
-  defmacro defpipe({name, _, _}, do: patterns = [{:->, _, _} | _]) do
+  defmacro defpipe({name, _, nil}, do: patterns = [{:->, _, _} | _]) do
     bang = Atom.to_string(name) |> String.ends_with?("!")
     pipe = bang && :pipe! || :pipe
     patterns = Macro.escape(patterns)
