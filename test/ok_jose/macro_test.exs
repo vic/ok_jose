@@ -12,6 +12,11 @@ defmodule OkJose.MacroTest do
     end
   end
 
+
+  defmodule X do
+    defstruct []
+  end
+
   test "piped int literal" do
     assert_piped 1, 1
   end

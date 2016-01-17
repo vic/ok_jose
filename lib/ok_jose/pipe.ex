@@ -1,5 +1,7 @@
 defmodule OkJose.Pipe do
 
+  @moduledoc false
+
   @noop []
   @same (quote do
     x -> x
