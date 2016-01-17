@@ -57,6 +57,7 @@ defmodule OkJose.PipeTest do
     import Cats
     import Dogs
     assert %Doggie{} = doggie |> upgrade |> ok_cats
+    assert %Doggie{} = %Doggie{} |> upgrade |> ok_cats
   end
 
 end

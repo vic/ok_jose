@@ -96,7 +96,7 @@ def nop(x), do: {:error, x}
 
 ```elixir
         def deps do
-          [{:ok_jose, "~> 1.0.0"}]
+          [{:ok_jose, "~> 2.0.0"}]
         end
 ```
 

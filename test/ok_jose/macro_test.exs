@@ -21,6 +21,10 @@ defmodule OkJose.MacroTest do
     assert_piped 1, 1
   end
 
+  test "piped struct literal" do
+    assert_piped(%X{}, %X{})
+  end
+
   test "piped no-arg call" do
     assert_piped(foo(), foo())
   end
