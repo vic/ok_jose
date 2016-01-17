@@ -7,6 +7,16 @@ idiom `{:ok, _}` and `{:error, _}` tuples.
 You can also define your own pattern-matched
 pipes besides `ok` and `error`.
 
+## Installation
+
+  1. Add ok_jose to your list of dependencies in `mix.exs`:
+
+```elixir
+        def deps do
+          [{:ok_jose, "~> 2.0.0"}]
+        end
+```
+
 ## Motivation
 
 A lot of erlang libraries follow the
@@ -94,8 +104,9 @@ end
 
 ## Example
 
-```elixir
 
+###### ok math
+```elixir
 def dup(x), do: {:ok, x * 2}
 def nop(x), do: {:error, x}
 
@@ -106,14 +117,19 @@ def nop(x), do: {:error, x}
 {:ok, 24} |> nop |> dup |> ok! # raises
 ```
 
-## Installation
-
-  1. Add ok to your list of dependencies in `mix.exs`:
+###### kittens
 
 ```elixir
-        def deps do
-          [{:ok_jose, "~> 2.0.0"}]
-        end
+defpipe ok_kitten do
+  k = %Kitten{} -> k
+  t = %Tiger{domesticated: true} -> t
+end
+
+def purr(%Kitten{}), do: "purr"
+def purr(%Tiger{}), do: "PuRRR"
+
+%Kitten{} |> purr |> ok_kitten #=> "purr"
+ok_kitten( %Doggie{} |> purr ) #=> %Doggie{}
 ```
 
 ## About ok
