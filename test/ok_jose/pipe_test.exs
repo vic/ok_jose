@@ -60,4 +60,13 @@ defmodule OkJose.PipeTest do
     assert %Doggie{} = %Doggie{} |> upgrade |> ok_cats
   end
 
+  test "defpipe catz/2 with do/end" do
+    import Cats
+    import Dogs
+    assert Kitten =
+      kitten |> (ok_cats do %{__struct__: x} -> x end)
+    assert Tiger =
+      tiger |> (ok_cats do %{__struct__: x} -> x end)
+  end
+
 end
