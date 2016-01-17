@@ -68,11 +68,12 @@ does not match `{:ok, _}` raises a match error.
 #### `defpipe`
 
 Allows you to define custom pipe patterns, for example
-the previous `ok`, `ok!` macros are defined like:
+the previous `ok`, macro is defined like:
 
 ```elixir
-defpipe ok(value <- {:ok, value})
-defpipe ok!(value <- {:ok, value})
+defpipe ok do
+  {:ok, value} -> value
+end
 ```
 
 ## Example

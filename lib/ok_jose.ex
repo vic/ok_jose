@@ -13,10 +13,20 @@ defmodule OkJose do
 
   use OkJose.Pipe
 
-  defpipe ok(value <- {:ok, value})
-  defpipe ok!(value <- {:ok, value})
+  defpipe ok do
+    {:ok, value} -> value
+  end
 
-  defpipe error(value <- {:error, value})
-  defpipe error!(value <- {:error, value})
+  defpipe ok! do
+    {:ok, value} -> value
+  end
+
+  defpipe error do
+    {:error, value} -> value
+  end
+
+  defpipe error! do
+    {:error, value} -> value
+  end
 
 end
