@@ -94,11 +94,11 @@ end
 def dup(x), do: {:ok, x * 2}
 def nop(x), do: {:error, x}
 
-12 |> dup |> dup |> ok # => {:ok, 48}
-24 |> nop |> dup |> ok # => {:error, 24}
+{:ok, 12} |> dup |> dup |> ok # => {:ok, 48}
+{:ok, 24} |> nop |> dup |> ok # => {:error, 24}
 
-24 |> dup |> ok! # => 48
-24 |> nop |> dup |> ok! # raises
+{:ok, 24} |> dup |> ok! # => 48
+{:ok, 24} |> nop |> dup |> ok! # raises
 ```
 
 ## Installation
