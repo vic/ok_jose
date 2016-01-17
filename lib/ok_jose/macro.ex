@@ -11,6 +11,9 @@ defmodule OkJose.Macro do
   # local functions
   def piped(code = {_, _, []}), do: code
 
+  # tuple literals
+  def piped(code = {:{}, _, _}), do: code
+
   # handle struct literals %Foo{}
   def piped(code = {:%, _, [_, {:%{}, _, _}]}) do
     code

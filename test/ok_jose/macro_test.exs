@@ -25,6 +25,10 @@ defmodule OkJose.MacroTest do
     assert_piped(%X{}, %X{})
   end
 
+  test "piped tuple literal" do
+    assert_piped({1, 2, 3, 4}, {1, 2, 3, 4})
+  end
+
   test "piped no-arg call" do
     assert_piped(foo(), foo())
   end
