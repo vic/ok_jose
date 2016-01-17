@@ -21,40 +21,56 @@ defmodule OkJose.Pipe do
       defmacro unquote(name)(code) do
         OkJose.Pipe.unquote(pipe)(code, unquote(patterns))
       end
+
+      defmacro unquote(name)(prev, code) do
+        OkJose.Pipe.unquote(pipe)(prev, code, unquote(patterns))
+      end
     end
   end
 
   def pipe!(code, patterns) do
     pipe = piped(code, patterns, @noop)
     match = {:case, [], [[do: patterns]]}
-    Macro.pipe(pipe, match, 0)
+    rpipe(match, pipe)
+  end
+
+  def pipe!(prev, code, patterns) do
+    case_next(code, patterns, @noop) |> rpipe(prev)
   end
 
   def pipe(code, patterns) do
     piped(code, patterns, @same)
   end
 
-  defp piped(code, patterns, otherwise) do
-    OkJose.Macro.piped(code)
-    |> make_pipe(&case_next(&1, patterns, otherwise))
+  def pipe(prev, code, patterns) do
+    case_next(code, patterns, @same) |> rpipe(prev)
   end
 
-  defp case_next({next, 0}, patterns, otherwise) do
+  defp piped(code, patterns, otherwise) do
+    OkJose.Macro.piped(code)
+    |> make_pipe(fn {next,0} ->
+      case_next(next, patterns, otherwise)
+    end)
+  end
+
+  defp case_next(next, patterns, otherwise) do
     clauses = patterns |> Enum.map(&match_cont(&1, next))
     clauses = clauses ++ otherwise
     {:case, [], [[do: clauses]]}
   end
 
   defp match_cont({:->, l, [pattern, value]}, next) do
-    {:->, l, [pattern, Macro.pipe(value, next, 0)]}
+    {:->, l, [pattern, rpipe(next, value)]}
   end
 
   defp make_pipe(pipe, needle) do
-    [{first,_} | rest] = pipe |> Macro.unpipe
+    [{first,0} | rest] = pipe |> Macro.unpipe
     rest
     |> Enum.map(needle)
     |> List.insert_at(0, first)
-    |> Enum.reduce(&Macro.pipe(&2, &1, 0))
+    |> Enum.reduce(&rpipe/2)
   end
+
+  defp rpipe(a, b), do: quote(do: unquote(b) |> unquote(a))
 
 end

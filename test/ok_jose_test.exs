@@ -10,6 +10,7 @@ defmodule OkJoseTest do
   defp nop(x), do: {:error, x}
   defp div(_x, 0), do: {:error, :div_by_zero}
   defp div(x, y), do: {:ok, x / y}
+  defp str(a, b), do: "#{b} #{inspect(a)}"
 
   test "ok/1 returns int value" do
     assert 22 = 22 |> ok
@@ -62,6 +63,26 @@ defmodule OkJoseTest do
         {:ok, 12}
         |> dup
         |> Integer.to_string)
+  end
+
+  test "ok/2 pipes" do
+    assert "24" == {:ok, 12} |> ok(dup) |> ok(inspect)
+  end
+
+  test "ok/2 with ok value" do
+    assert "yes 24" ==
+      {:ok, 12}
+      |> ok(dup)
+      |> error(dup)
+      |> ok(str("yes"))
+  end
+
+  test "error/2" do
+    assert "no {:ok, 48}" ==
+      {:ok, 12} |> dup |> ok
+      |> ok(dup |> nop)
+      |> error(str("no"))
+      |> ok(str("yes"))
   end
 
 end
