@@ -16,15 +16,25 @@ defmodule OkJose.PipeTest do
     defstruct []
   end
 
-  defmodule Catz do
+  defmodule Cats do
     def upgrade(%Kitten{}), do: %Tiger{}
     def downgrade(%Tiger{}), do: %Kitten{}
 
     use OkJose.Pipe
-    defpipe catz do
+
+    defpipe ok_cats do
       k = %Kitten{} -> k
       t = %Tiger{} -> t
     end
+
+    defpipe ok_tiger do
+      t = %Tiger{} -> t
+    end
+
+    defpipe ok_kitten do
+      k = %Kitten{} -> k
+    end
+
 
     def kitten, do: %Kitten{}
     def tiger, do: %Tiger{}
@@ -36,15 +46,17 @@ defmodule OkJose.PipeTest do
 
 
   test "defpipe catz pipes with pattern" do
-    import Catz
+    import Cats
     import Dogs
-    assert %Tiger{} = kitten |> upgrade |> catz
+    assert %Tiger{} = kitten |> upgrade |> ok_cats
+    assert %Kitten{} = tiger |> downgrade |> ok_tiger
+    assert %Kitten{} = kitten |> downgrade |> ok_tiger
   end
 
   test "defpipe catz ignores doggie value" do
-    import Catz
+    import Cats
     import Dogs
-    assert %Doggie{} = doggie |> upgrade |> catz
+    assert %Doggie{} = doggie |> upgrade |> ok_cats
   end
 
 end
