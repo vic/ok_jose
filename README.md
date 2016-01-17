@@ -76,6 +76,17 @@ defpipe ok do
 end
 ```
 
+The `do` block of `defpipe` must have the same form as the elixir `case` expression.
+
+So for example, you may define a pipe to work on kittens only:
+
+```elixir
+defpipe purr do
+  c = %Kitten{} -> c
+  t = %Tiger{domesticated: true} -> t
+end
+```
+
 ## Example
 
 ```elixir
