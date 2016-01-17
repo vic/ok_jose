@@ -35,6 +35,12 @@ can be written as:
 filename |> File.read |> Poison.Parser.parse |> ok
 ```
 
+or alternatively:
+
+```elixir
+ok(filename |> File.read |> Poison.Parser.parse)
+```
+
 ## Usage
 
 ```elixir
@@ -51,7 +57,7 @@ use OkJose.Pipe
 
 which provides you the `defpipe` macro.
 
-#### `ok`
+#### `ok/1`
 
 Pipes values into functions as long as they match `{:ok, _}`
 
@@ -59,24 +65,23 @@ Pipes values into functions as long as they match `{:ok, _}`
 {:ok, v} |> f |> g |> ok
 ```
 
-#### `ok!`
+#### `ok!/1`
 
 Pipes values into functions but if at any point a value
 does not match `{:ok, _}` raises a match error.
 
-
 #### `defpipe`
 
 Allows you to define custom pipe patterns, for example
-the previous `ok`, macro is defined like:
+the previous `ok!`, macro is defined like:
 
 ```elixir
-defpipe ok do
+defpipe ok! do
   {:ok, value} -> value
 end
 ```
 
-The `do` block of `defpipe` must have the same form as the elixir `case` expression.
+The `do` block of `defpipe` has the same form as the elixir `case` expression.
 
 So for example, you may define a pipe to work on kittens only:
 
