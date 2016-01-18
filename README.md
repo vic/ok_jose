@@ -7,6 +7,8 @@ idiom `{:ok, _}` and `{:error, _}` tuples.
 You can also define your own pattern-matched
 pipes besides `ok` and `error`.
 
+Also, checkout [happy](https://github.com/vic/happy)
+
 ## Installation
 
   1. Add ok_jose to your list of dependencies in `mix.exs`:
@@ -149,6 +151,7 @@ Actually both projects are trying to solve the
 same issue. But I think this one has an easier
 syntax that consist of just piping to `ok`
 
+Also, checkout [happy](https://github.com/vic/happy)
 
 ## Is it any good?
 
