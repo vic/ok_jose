@@ -157,3 +157,14 @@ Also, checkout [happy](https://github.com/vic/happy)
 
 [Yes](https://news.ycombinator.com/item?id=3067434)
 
+##### マクロス Makurosu
+
+[Elixir macros,] The things I do for beautiful code
+― George Martin, Game of Thrones
+
+[#myelixirstatus](https://twitter.com/hashtag/myelixirstatus?src=hash)
+[#FridayLiterally](http://futurice.com/blog/friday-literally)
+
+
+
+
