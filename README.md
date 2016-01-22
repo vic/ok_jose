@@ -159,7 +159,7 @@ Also, checkout [happy](https://github.com/vic/happy)
 
 ##### マクロス Makurosu
 
-[Elixir macros,] The things I do for beautiful code
+[[Elixir macros](https://github.com/h4cc/awesome-elixir#macros),] The things I do for beautiful code
 ― George Martin, Game of Thrones
 
 [#myelixirstatus](https://twitter.com/hashtag/myelixirstatus?src=hash)
