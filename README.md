@@ -7,7 +7,11 @@ idiom `{:ok, _}` and `{:error, _}` tuples.
 You can also define your own pattern-matched
 pipes besides `ok` and `error`.
 
-Also, checkout [happy](https://github.com/vic/happy)
+Besides `ok_jose` I've made a couple more of related macro libraries
+that might be related (or useful depending on your needs and taste):
+
+- [happy](https://github.com/vic/happy) from back before `with` landed elixir 1.2
+- [pit](https://github.com/vic/pit) a kind of pipeable `with`.
 
 ## Installation
 
