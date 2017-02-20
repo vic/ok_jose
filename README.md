@@ -1,5 +1,8 @@
 # Ok Jose
 
+[![help maintain this lib](https://img.shields.io/badge/looking%20for%20maintainer-DM%20%40vborja-663399.svg)](https://twitter.com/vborja)
+
+
 A tiny library for piping function return
 values on a given pattern like the erlang
 idiom `{:ok, _}` and `{:error, _}` tuples.
