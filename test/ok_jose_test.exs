@@ -21,40 +21,40 @@ defmodule OkJoseTest do
   end
 
   test "ok/1 invokes function" do
-    assert {:ok, 24} = foo |> ok
+    assert {:ok, 24} = foo() |> ok
   end
 
   test "ok/1 invokes chain" do
-    assert {:ok, 48} = foo |> dup |> ok
+    assert {:ok, 48} = foo() |> dup() |> ok
   end
 
   test "ok/1 dont chains on error" do
-    assert {:error, :div_by_zero} == foo |> div(0) |> dup |> ok
+    assert {:error, :div_by_zero} == foo() |> div(0) |> dup() |> ok
   end
 
   test "ok/1 chains on ok" do
-    assert {:ok, 48} = {:ok, 24} |> dup |> ok
+    assert {:ok, 48} = {:ok, 24} |> dup() |> ok
   end
 
   test "ok/1 mismatch halts chain" do
-    assert {:error, 22} = {:ok, 22} |> nop |> dup |> ok
+    assert {:error, 22} = {:ok, 22} |> nop() |> dup() |> ok
   end
 
   test "ok/1 fn returning mismatch" do
     fun = fn ->
       {:error, 12}
     end
-    assert {:error, 12} = fun.() |> dup |> ok
+    assert {:error, 12} = fun.() |> dup() |> ok
   end
 
   test "ok!/1 raises on non-ok" do
     assert_raise CaseClauseError, fn ->
-      foo |> nop |> dup |> ok!
+      foo() |> nop() |> dup() |> ok!
     end
   end
 
   test "ok!/1 returns value" do
-    assert 12.0 == foo |> dup |> div(4) |> ok!
+    assert 12.0 == foo() |> dup() |> div(4) |> ok!
   end
 
   test "ok/1 as function" do
@@ -79,8 +79,8 @@ defmodule OkJoseTest do
 
   test "error/2" do
     assert "no {:ok, 48}" ==
-      {:ok, 12} |> dup |> ok
-      |> ok(dup |> nop)
+      {:ok, 12} |> dup() |> ok
+      |> ok(dup() |> nop)
       |> error(str("no"))
       |> ok(str("yes"))
   end

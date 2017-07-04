@@ -47,24 +47,24 @@ defmodule OkJose.PipeTest do
   test "defpipe catz pipes with pattern" do
     import Cats
     import Dogs
-    assert %Tiger{} = kitten |> upgrade |> ok_cats
-    assert %Kitten{} = tiger |> downgrade |> ok_tiger
-    assert %Kitten{} = kitten |> downgrade |> ok_tiger
+    assert %Tiger{} = kitten() |> upgrade() |> ok_cats
+    assert %Kitten{} = tiger() |> downgrade() |> ok_tiger
+    assert %Kitten{} = kitten() |> downgrade() |> ok_tiger
   end
 
   test "defpipe catz ignores doggie value" do
     import Cats
     import Dogs
-    assert %Doggie{} = doggie |> upgrade |> ok_cats
-    assert %Doggie{} = %Doggie{} |> upgrade |> ok_cats
+    assert %Doggie{} = doggie() |> upgrade() |> ok_cats
+    assert %Doggie{} = %Doggie{} |> upgrade() |> ok_cats
   end
 
   test "defpipe catz/2 with do/end" do
     import Cats
     assert Kitten =
-      kitten |> (ok_cats do %{__struct__: x} -> x end)
+      kitten() |> (ok_cats do %{__struct__: x} -> x end)
     assert Tiger =
-      tiger |> (ok_cats do %{__struct__: x} -> x end)
+      tiger() |> (ok_cats do %{__struct__: x} -> x end)
   end
 
 end
