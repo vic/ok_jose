@@ -158,7 +158,7 @@ end
 And you can use them by just adding to the end of the pipe
 
 ```elixir
-{:ok, pet}
+pet
 |> take_out
 |> go_to(:park)
 |> play_with(:kids)
