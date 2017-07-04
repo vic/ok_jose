@@ -9,7 +9,7 @@ defmodule OkJose.Pipe do
 
   defmacro __using__(_) do
     quote do
-      import OkJose.Pipe, only: [defpipe: 2]
+      import OkJose.Pipe, only: [defpipe: 2, pipe_when: 2]
     end
   end
 
@@ -26,6 +26,20 @@ defmodule OkJose.Pipe do
         OkJose.Pipe.unquote(pipe)(prev, code, unquote(patterns))
       end
     end
+  end
+
+  defmacro pipe_when(code, do: patterns = [{:->, _, _} | _]) do
+    code
+    |> OkJose.Macro.piped
+    |> make_pipe(fn {next, 0} ->
+      quote do
+        case do unquote(patterns) end
+        |> case do
+          {false, value} -> value
+          {true, value} -> value |> unquote(next)
+        end
+      end
+    end)
   end
 
   def pipe!(code, patterns) do

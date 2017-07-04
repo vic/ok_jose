@@ -85,4 +85,16 @@ defmodule OkJoseTest do
       |> ok(str("yes"))
   end
 
+  test "ok?/2 pipes" do
+    assert {:ok, "14"} ==
+      {:ok, 12}
+      |> fn x -> {:ok, x + 2} end.()
+      |> fn x -> {:ok, to_string(x)} end.()
+      |> fn x -> {:ok, x + 2} end.()
+      |> (pipe_when do
+        {:ok, x} when not is_binary(x) -> {true,  x}
+        {:ok, y} -> {false, {:ok, y}}
+      end)
+  end
+
 end
