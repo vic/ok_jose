@@ -5,15 +5,23 @@ defmodule OkJose.PipeTest do
   import OkJose.Pipe
 
   defmodule Kitten do
-    defstruct []
+    defstruct [:name]
   end
 
   defmodule Tiger do
-    defstruct []
+    defstruct [:name]
   end
 
   defmodule Doggie do
-    defstruct []
+    defstruct [:name]
+  end
+
+  defmodule Fish do
+    defstruct [:name]
+  end
+
+  defmodule Cocodrile do
+    defstruct [:name]
   end
 
   defmodule Cats do
@@ -35,13 +43,21 @@ defmodule OkJose.PipeTest do
       k = %Kitten{} -> k
     end
 
-
     def kitten, do: %Kitten{}
     def tiger, do: %Tiger{}
   end
 
   defmodule Dogs do
     def doggie, do: %Doggie{}
+  end
+
+  defmodule Home do
+    use OkJose.Pipe
+
+    defpipe til_danger? do
+      t = %{__struct__: x} when x == Tiger or x == Cocodrile -> {false, t}
+      x -> {true, x}
+    end
   end
 
   test "defpipe catz pipes with pattern" do
@@ -65,6 +81,16 @@ defmodule OkJose.PipeTest do
       kitten() |> (ok_cats do %{__struct__: x} -> x end)
     assert Tiger =
       tiger() |> (ok_cats do %{__struct__: x} -> x end)
+  end
+
+  test "defpipe safe?" do
+    import Home
+    assert %Cocodrile{} =
+      %Kitten{name: "silvestre"}
+      |> fn _ -> %Fish{name: "olivia"} end.()
+      |> fn _ -> %Cocodrile{name: "teodoro"} end.()
+      |> fn _ -> %Tiger{name: "jorge"} end.()
+      |> til_danger?
   end
 
 end

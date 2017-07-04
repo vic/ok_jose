@@ -14,9 +14,23 @@ defmodule OkJose.Pipe do
   end
 
   defmacro defpipe({name, _, nil}, do: patterns = [{:->, _, _} | _]) do
-    bang = Atom.to_string(name) |> String.ends_with?("!")
-    pipe = bang && :pipe! || :pipe
-    patterns = Macro.escape(patterns)
+    last = Atom.to_string(name) |> String.at(-1)
+    def_pipe(last, name, Macro.escape(patterns))
+  end
+
+  defp def_pipe("!", name, patterns), do: def_pipe(:pipe!, name, patterns)
+  defp def_pipe("?", name, patterns), do: def_pipe(:pipe?, name, patterns)
+  defp def_pipe(x, name, patterns) when is_binary(x), do: def_pipe(:pipe, name, patterns)
+
+  defp def_pipe(:pipe?, name, patterns) do
+    quote do
+      defmacro unquote(name)(code) do
+        OkJose.Pipe.pipe?(code, unquote(patterns))
+      end
+    end
+  end
+
+  defp def_pipe(pipe, name, patterns) when pipe == :pipe or pipe == :pipe! do
     quote do
       defmacro unquote(name)(code) do
         OkJose.Pipe.unquote(pipe)(code, unquote(patterns))
@@ -29,15 +43,19 @@ defmodule OkJose.Pipe do
   end
 
   defmacro pipe_when(code, do: patterns = [{:->, _, _} | _]) do
+    pipe?(code, patterns)
+  end
+
+  def pipe?(code, patterns) do
     code
     |> OkJose.Macro.piped
     |> make_pipe(fn {next, 0} ->
       quote do
         case do unquote(patterns) end
         |> case do
-          {false, value} -> value
-          {true, value} -> value |> unquote(next)
-        end
+             {false, value} -> value
+             {true, value} -> value |> unquote(next)
+           end
       end
     end)
   end
