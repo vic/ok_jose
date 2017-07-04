@@ -3,7 +3,7 @@ defmodule OkJose.Mixfile do
 
   def project do
     [app: :ok_jose,
-     version: "2.0.0",
+     version: "2.1.0",
      description: description(),
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
@@ -42,6 +42,8 @@ defmodule OkJose.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:credo, "~> 0.2.4", only: :dev}]
+    [{:credo, "~> 0.2.4", only: :dev},
+     {:ex_doc, ">= 0.0.0", only: :dev} 
+    ]
   end
 end
