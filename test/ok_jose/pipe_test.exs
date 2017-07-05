@@ -93,4 +93,33 @@ defmodule OkJose.PipeTest do
       |> til_danger?
   end
 
+  defmodule User do
+    defpipe ok_til_user? do
+      x = {:ok, :user} -> {false, x}
+      {:ok, n} -> {true, n}
+    end
+
+    def inc(3), do: {:ok, :user}
+    def inc(x), do: {:ok, x + 1}
+  end
+
+  test "til_user? stops piping when got a user" do
+    import User
+
+    assert {:ok, 2} =
+    {:ok, 0}
+    |> inc
+    |> inc
+    |> ok_til_user?
+
+    assert {:ok, :user} =
+    {:ok, 0}
+    |> inc
+    |> inc
+    |> inc
+    |> inc
+    |> inc
+    |> ok_til_user?
+  end
+
 end
