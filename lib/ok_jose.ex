@@ -6,27 +6,9 @@ defmodule OkJose do
 
   defmacro __using__(_) do
     quote do
-      use OkJose.Pipe
-      import OkJose
+      import OkJose.Pipe
+      import OkJose.DefPipe, only: [defpipe: 2, pipe_when: 2]
     end
-  end
-
-  use OkJose.Pipe
-
-  defpipe ok do
-    {:ok, value} -> value
-  end
-
-  defpipe ok! do
-    {:ok, value} -> value
-  end
-
-  defpipe error do
-    {:error, value} -> value
-  end
-
-  defpipe error! do
-    {:error, value} -> value
   end
 
 end

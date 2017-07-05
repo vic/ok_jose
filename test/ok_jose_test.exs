@@ -85,7 +85,7 @@ defmodule OkJoseTest do
       |> ok(str("yes"))
   end
 
-  test "ok?/2 pipes" do
+  test "pipe_when stops pipe" do
     assert {:ok, "14"} ==
       {:ok, 12}
       |> fn x -> {:ok, x + 2} end.()
@@ -95,6 +95,16 @@ defmodule OkJoseTest do
         {:ok, x} when not is_binary(x) -> {true,  x}
         {:ok, y} -> {false, {:ok, y}}
       end)
+  end
+
+
+  test "ok as non final step on pipe" do
+    assert {:jaja, 11} =
+      {:ok, 10}
+      |> fn y -> {:error, y + 1} end.()
+      |> fn x -> {:ok, x * 2} end.()
+      |> ok
+      |> fn {:error, x} -> {:jaja, x} end.()
   end
 
 end

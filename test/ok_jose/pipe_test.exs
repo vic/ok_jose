@@ -2,8 +2,6 @@ defmodule OkJose.PipeTest do
   use ExUnit.Case
   doctest OkJose.Pipe
 
-  import OkJose.Pipe
-
   defmodule Kitten do
     defstruct [:name]
   end
@@ -28,7 +26,7 @@ defmodule OkJose.PipeTest do
     def upgrade(%Kitten{}), do: %Tiger{}
     def downgrade(%Tiger{}), do: %Kitten{}
 
-    use OkJose.Pipe
+    use OkJose
 
     defpipe ok_cats do
       k = %Kitten{} -> k
@@ -52,7 +50,7 @@ defmodule OkJose.PipeTest do
   end
 
   defmodule Home do
-    use OkJose.Pipe
+    use OkJose
 
     defpipe til_danger? do
       t = %{__struct__: x} when x == Tiger or x == Cocodrile -> {false, t}
@@ -94,6 +92,8 @@ defmodule OkJose.PipeTest do
   end
 
   defmodule User do
+    use OkJose
+
     defpipe ok_til_user? do
       x = {:ok, :user} -> {false, x}
       {:ok, n} -> {true, n}
