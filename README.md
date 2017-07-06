@@ -1,5 +1,6 @@
 # Ok Jose
 
+<a href="https://travis-ci.org/vic/ok_jose"><img src="https://travis-ci.org/vic/ok_jose.svg"></a>
 [![help maintain this lib](https://img.shields.io/badge/looking%20for%20maintainer-DM%20%40vborja-663399.svg)](https://twitter.com/vborja)
 
 
