@@ -7,13 +7,7 @@ defmodule OkJose.DefPipe do
     x -> x
   end)
 
-  defmacro __using__(_) do
-    quote do
-      import OkJose.DefPipe, only: [defpipe: 2, pipe_when: 2]
-    end
-  end
-
-  defmacro defpipe({name, _, nil}, do: patterns = [{:->, _, _} | _]) do
+  defmacro def_pipe({name, _, nil}, do: patterns = [{:->, _, _} | _]) do
     last = Atom.to_string(name) |> String.at(-1)
     def_pipe(last, name, Macro.escape(patterns))
   end

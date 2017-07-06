@@ -19,7 +19,7 @@ that might be related (or useful depending on your needs and taste):
 
 ```elixir
   def deps do
-    [{:ok_jose, "~> 2.1.0"}]
+    [{:ok_jose, "~> 3.0.0"}]
   end
 ```
 
@@ -50,10 +50,12 @@ end
 can be written as:
 
 ```elixir
+use OkJose
+
 {:ok, filename}
 |> File.read
 |> Poison.Parser.parse
-|> ok
+|> Pipe.ok
 ```
 
 The main advantage of the macros defined by OkJose is that you dont need to learn new syntax
@@ -62,110 +64,92 @@ case clauses.
 
 ## Usage
 
+Read the [OkJose.Pipe docs](https://hexdocs.pm/ok_jose/OkJose.Pipe.html) for examples.
+
 ### `use OkJose`
 
-Provides you with the following macros:
+Provides you with the `defpipe` macro and aliases `OkJose.Pipe` as `Pipe`
+in the current lexical context.
 
-##### `ok/2`
+##### [ok/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#ok/2)
 
-Pipes values into functions as long as they match `{:ok, _}`
-
-```elixir
-{:ok, v} |> f |> g |> ok
-```
-
-##### `ok!/2`
-
-Pipes values into functions but if at any point a value
-does not match `{:ok, _}` raises a match error.
-
-##### `error/2` and `error!/2`
-
-Work exactly as the previous examples, but for tuples tagged as `:error`.
-
-### `use OkJose.Pipe`
-
-#### `defpipe`
-
-This module lets you define your own pipes, actually the
-previous `ok` pipe is defined like the following. Any
-value not matching is just piped as-is down the pipe.
+Passes values down the pipe as long as they macth `{:ok, value}`.
 
 ```elixir
-defpipe ok do
-  {:ok, value} -> value
-end
+{:ok, filename}
+|> File.read
+|> Poison.Parser.parse
+|> Pipe.ok
 ```
 
-However if the pipe name ends with an exclamation mark,
-and no clause matches, an error will be raise just as with
-any function not matching on its arguments.
-
-```elixir
-defpipe ok! do
-  {:ok, value} -> value
-end
-```
+see also 
+[ok!/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#ok!/2),
+[error/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#error/2),
+[error!/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#error!/2)
 
 
-With these you can define a pipe for working on common values
-like ecto models and changesets.
+##### [defpipe/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#defpipe/2)
+
+Lets you define a custom pipe, for example, for working with ok
+tuples and also valid ecto changesets.
 
 ```elixir
 defpipe ok_or_valid do
   {:ok, value} -> value
-  changeset = %{valid?: true}  -> changeset
+  valid = %{valid?: true} -> valid
 end
-```
 
-This way you can pipe ok values or valid changesets like:
 
-```elixir
 {:ok, %User{}}
 |> cast(params, @required)
-|> put_change(:name, "John")
+|> validate_required(:email)
 |> Repo.insert
-|> update_jwk_token
+|> Pipe.tap({:ok, send_welcome_email}) # discard email
 |> ok_or_valid
+# => {:ok, inserted_user}
 ```
 
-You can also define pipes that for values based on a predicate
-instead of just a pattern match. For example, if you need to
-call some function to determine if the value is safe to be
-passed through the rest of your pipe.
+##### [if/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#if/2),
 
-The `OkJose.pipe_when` macro takes a block of patterns and
-expects each to return a form like `{true, value}` or `{false, value}`
-The first boolean value on the tuple tells if the payload
-is to be passed down the pipe or if the pipe must suspend execution.
-
-This way you can use negative matches, for example
-the following pipe will only let safe pets to be given to functions:
-
-The predicate `?`-ending form of `defpipe` is just sugar for `pipe_when`
+Lets you pipe values as long as they satisfy a function predicate.
+This can be useful for cases where you need to call functions and
+not only pattern match on the piped values.
 
 ```elixir
-@dangerous [Lion, Wolf, Cocodrile]
-
-defpipe pet_safe? do
-  pet = %{__struct__: mod} when not mod in @dangerous -> 
-    {true, pet}
-  anything ->
-    {false, pet}
-end
+[1]
+|> fn x -> [5 | x] end.()
+|> fn x -> [4 | x] end.()
+|> fn x -> [3 | x] end.()
+|> fn x -> [2 | x] end.()
+|> Pipe.if(fn x -> Enum.sum(x) < 10 end)
+# => [4, 5, 1]
 ```
+##### [cond/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#cond/2)
 
-And you can use them by just adding to the end of the pipe
+A more generic way to select which values can be passed down the
+pipe and which cause the pipe to stop.
 
 ```elixir
-pet
-|> take_out
-|> go_to(:park)
-|> play_with(:kids)
-|> pet_safe?
+{:ok, jwt_token}
+|> User.find_by_jwt
+|> User.new_session
+|> (Pipe.cond do
+  # stop piping if no user found
+  nil -> {false, {:error, :invalid_token}}
+
+  # user gets piped only if not currently logged in
+  {:ok, user = %User{}} -> 
+    if User.is_logged_in?(user) do
+      {false, {:error, :already_logged_in}}
+    else
+      {true, user}
+    end
+end)
 ```
 
-## About ok
+##### [and more](https://hexdocs.pm/ok_jose/OkJose.Pipe.html)
+
+## About
 
 OkJose was born a while ago, back before we had Elixir 1.0, and before Elixir had its
 own `with` form to deal with this kind of problems. There are a lot of other libraries

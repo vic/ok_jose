@@ -23,9 +23,6 @@ defmodule OkJose.PipeTest do
   end
 
   defmodule Cats do
-    def upgrade(%Kitten{}), do: %Tiger{}
-    def downgrade(%Tiger{}), do: %Kitten{}
-
     use OkJose
 
     defpipe ok_cats do
@@ -40,6 +37,9 @@ defmodule OkJose.PipeTest do
     defpipe ok_kitten do
       k = %Kitten{} -> k
     end
+
+    def upgrade(%Kitten{}), do: %Tiger{}
+    def downgrade(%Tiger{}), do: %Kitten{}
 
     def kitten, do: %Kitten{}
     def tiger, do: %Tiger{}
@@ -121,5 +121,23 @@ defmodule OkJose.PipeTest do
     |> inc
     |> ok_til_user?
   end
+
+  defmodule Maybe do
+    use OkJose
+    defpipe just do
+      {:just, :me} -> "jordan"
+      {:just, value} -> value
+    end
+  end
+
+  test "README Maybe" do
+    require Maybe
+    assert "Jordan" ==
+    {:just, :me}
+    |> String.capitalize
+    |> String.reverse
+    |> Maybe.just
+  end
+
 
 end

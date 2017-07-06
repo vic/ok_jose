@@ -3,6 +3,8 @@ defmodule OkJoseTest do
   doctest OkJose
 
   use OkJose
+  import OkJose
+
   import Kernel, except: [div: 2]
 
   defp foo, do: {:ok, 24}
@@ -85,18 +87,25 @@ defmodule OkJoseTest do
       |> ok(str("yes"))
   end
 
-  test "pipe_when stops pipe" do
+  test "pipe_cond stops pipe" do
     assert {:ok, "14"} ==
       {:ok, 12}
       |> fn x -> {:ok, x + 2} end.()
       |> fn x -> {:ok, to_string(x)} end.()
       |> fn x -> {:ok, x + 2} end.()
-      |> (pipe_when do
+      |> (pipe_cond do
         {:ok, x} when not is_binary(x) -> {true,  x}
         {:ok, y} -> {false, {:ok, y}}
       end)
   end
 
+  test "pipe_if" do
+    assert [5, 1] ==
+      [1]
+      |> fn x -> [5|x] end.()
+      |> fn x -> [10|x] end.()
+      |> pipe_if(fn x -> Enum.sum(x) < 5 end)
+  end
 
   test "ok as non final step on pipe" do
     assert {:jaja, 11} =
