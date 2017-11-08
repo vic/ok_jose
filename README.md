@@ -34,7 +34,7 @@ tagged tuples.
 
 This library is my try at having a beautiful syntax for a *happy pipe*, that is, a pipe that expects `{:ok, _}`
 tuples to be returned by each piped function.
-If any piped function returns a non matched value, the remaining functions expecting an `{:ok, _}` value wont get executed.
+If any piped function returns a non matched value, the remaining functions expecting an `{:ok, _}` value won't get executed.
 
 So, for example, the following code
 
@@ -59,7 +59,7 @@ use OkJose
 |> Pipe.ok
 ```
 
-The main advantage of the macros defined by OkJose is that you dont need to learn new syntax
+The main advantage of the macros defined by OkJose is that you don't need to learn new syntax
 it's just plain old Elixir piping. It's also very easy to define your own, as they are just
 case clauses.
 
@@ -74,7 +74,7 @@ in the current lexical context.
 
 ##### [ok/2](https://hexdocs.pm/ok_jose/OkJose.Pipe.html#ok/2)
 
-Passes values down the pipe as long as they macth `{:ok, value}`.
+Passes values down the pipe as long as they match `{:ok, value}`.
 
 ```elixir
 {:ok, filename}
@@ -161,12 +161,12 @@ to checkout these in particular:
   A growing library, also has a list of alternatives at their Readme.
 
 - [`happy`](https://github.com/vic/happy)
-  Work on OkJose leadme to creating happy and later [`happy_with`](https://github.com/vic/happy_with)
+  Work on OkJose lead me to creating happy and later [`happy_with`](https://github.com/vic/happy_with)
   They are just a bit less-pipeable than OkJose, and more on the spirit of Elixir's `with`
   
 - [`pit`](https://github.com/vic/pit)
   A weird one, for transforming and matching data at every pipe step. 
-  I dont know what I was thinking while doing it, but maybe it can be of use to someone.
+  I don't know what I was thinking while doing it, but maybe it can be of use to someone.
 
 ## Is it any good?
 
